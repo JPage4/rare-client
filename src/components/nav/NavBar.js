@@ -7,14 +7,19 @@ export const NavBar = ({ token, setToken, isAdmin }) => {
   const navigate = useNavigate()
   const navbar = useRef()
   const hamburger = useRef()
-  const [searchQuery, setSearchQuery] = useState("")
+  const [titleQuery, setTitleQuery] = useState("")
+  const [authorQuery, setAuthorQuery] = useState("")
   const [adminDropdownOpen, setAdminDropdownOpen] = useState(false)
 
   const handleSearch = (e) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      navigate(`/posts/search?q=${encodeURIComponent(searchQuery.trim())}`)
-      setSearchQuery("")
+    const params = new URLSearchParams()
+    if (titleQuery.trim()) params.set("q", titleQuery.trim())
+    if (authorQuery.trim()) params.set("author", authorQuery.trim())
+    if (params.toString()) {
+      navigate(`/posts/search?${params}`)
+      setTitleQuery("")
+      setAuthorQuery("")
     }
   }
 
@@ -82,13 +87,20 @@ export const NavBar = ({ token, setToken, isAdmin }) => {
             <div className="navbar-item">
               <form onSubmit={handleSearch} className="is-flex">
                 <input
-                  className="input"
+                  className="input mr-1"
                   type="text"
-                  placeholder="Search posts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Title..."
+                  value={titleQuery}
+                  onChange={(e) => setTitleQuery(e.target.value)}
                 />
-                <button type="submit" className="button is-outlined ml-1">Search</button>
+                <input
+                  className="input mr-1"
+                  type="text"
+                  placeholder="Author..."
+                  value={authorQuery}
+                  onChange={(e) => setAuthorQuery(e.target.value)}
+                />
+                <button type="submit" className="button is-outlined">Search</button>
               </form>
             </div>
           )}
